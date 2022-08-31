@@ -33,7 +33,7 @@ if userWord[3] == userLetter:
 if userWord[4] == userLetter:
     print(userLetter + " found at index 4")
     letterCount += 1
-
+    
 if letterCount == 0:
     print("No instances of " + userLetter + " found in " + userWord)
 elif letterCount == 1:
