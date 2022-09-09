@@ -3,9 +3,7 @@ __author__ = "730571332"
 
 
 def contains_char(word: str, letter: str) -> bool:
-
     """This function will check to see if a letter is in a word."""
-    
     assert len(letter) == 1
     i = len(word)
     while i > 0:
@@ -15,9 +13,7 @@ def contains_char(word: str, letter: str) -> bool:
     return False
 
 def emojified(guess: str, secret: str) -> str:
-
     """This function will return a string of emojis giving the user info on their guess."""
-
     wBox: str = "\U00002B1C"
     gBox: str = "\U0001F7E9"
     yBox: str = "\U0001F7E8"
@@ -35,18 +31,14 @@ def emojified(guess: str, secret: str) -> str:
     return key
 
 def input_guess(expL: int) -> str:
-
     """Getting an input for the expected length from the user."""
-
     userGuess: str = input(f"Enter a {expL} character word: ")
     while len(userGuess) != expL:
         userGuess = input(f"That wasn't {expL} chars! Try again: ")
     return userGuess
 
 def main() -> None:
-
     """The entrypoint of the program and main game loop."""
-
     secretWord = "coders"
     i = 1
     """Using i < 7 because user only gets 6 votes, not dependent on word length."""
