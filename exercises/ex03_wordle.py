@@ -29,3 +29,29 @@ def emojified(guess: str, secret: str) -> str:
             key += wBox
         i += 1
     return key
+
+def input_guess(expL: int) -> str:
+    """getting an input for the expected length from the user"""
+    userGuess: str = input(f"Enter a {expL} character word: ")
+    while len(userGuess) != expL:
+        userGuess = input(f"That wasn't {expL} chars! Try again: ")
+    return userGuess
+
+def main() -> None:
+    """the entrypoint of the program and main game loop"""
+    secretWord = "coders"
+    i = 1
+    """using i < 7 because user only gets 6 votes, not dependent on word length"""
+    while i < 7:
+        print(f"~ turn {i}/6 ~")
+        guessedWord = input_guess(len(secretWord))
+        print(emojified(guessedWord, secretWord))
+        if guessedWord == secretWord:
+            print(f"You won in {i}/6 turns!")
+            return None
+        i += 1
+    print("x/6 - sorry, try again tomorrow!")
+
+"""mystery code lol"""
+if __name__ == "__main__":
+    main()
