@@ -55,6 +55,7 @@ def main() -> None:
         i += 1
     print("x/6 - sorry, try again tomorrow!")
 
+
 """Mystery code lol."""
 if __name__ == "__main__":
     main()
