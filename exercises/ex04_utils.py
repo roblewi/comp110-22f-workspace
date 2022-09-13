@@ -1,10 +1,12 @@
 """This code will do something with lists to my understanding."""
-__author__ = "730571332"
+__author__: str = "730571332"
 
 
-def all(allInts: list, givenInt: int) -> bool:
+def all(allInts: list[int], givenInt: int) -> bool:
     """Will determine if every component of the list matches the givenInt."""
-    i = 0
+    i: int = 0
+    if len(allInts) == 0:
+        return False
     while i < len(allInts):
         if allInts[i] == givenInt:
             i += 1
@@ -13,17 +15,19 @@ def all(allInts: list, givenInt: int) -> bool:
     return True
 
 
-def max(maxInts: list) -> int:
+def max(maxInts: list[int]) -> int:
     """Returns the largest number in a list."""
-    i = 0
-    while i < (len(maxInts) - 1):
-        if maxInts[i + 1] > maxInts[i]:
-            biggestNumber = maxInts[i + 1]
+    biggestNumber = [float('-inf')]
+    i: int = 0
+    while i < len(maxInts):
+        if maxInts[i] > biggestNumber[0]:
+            biggestNumber.pop()
+            biggestNumber.append(maxInts[i])
         i += 1
-    return biggestNumber
+    return biggestNumber[0]
 
 
-def is_equal(firstList: list, secondList: list) -> bool:
+def is_equal(firstList: list[int], secondList: list[int]) -> bool:
     """Checks whether or not the lists share deep equality."""
     i = 0
     if len(firstList) != len(secondList):
