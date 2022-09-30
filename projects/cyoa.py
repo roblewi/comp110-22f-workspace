@@ -3,34 +3,42 @@ __author__ = '730571332'
 
 from random import randint
 
-UNICODE_ESCAPE = "\U00000000"
+from pyrsistent import v
 
 
 def greet(name: str) -> None:
-    # Function that greets the player given a name
+    # Function that greets the player given a name.
     global player
     player = name
-    print("")
-    print("")
-    print("")
-    print(f"Welcome, {name}")
-    print(f"Today, you will be participating in a randomized game. Enjoy.")
 
-def defuse() -> None:
-    return
+    # Clearing the terminal.
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
 
-def safecrack() -> None:
-    return
+    # Welcoming user.
+    print(f"Welcome, {name}!")
+    print("I hope you're having a great day so far!")
 
 
 def minefield() -> None:
-    # This function will effectively be the "home screen" for the minefield game.
+    # This function will effectively be the "home screen" for the Minefield game.
     print("")
     print("~~MINEFIELD~~")
     print("")
     print("You are given a top down view of your partner.")
     print("You need to give them directions to escape the minefield using the directions 'forward', 'left', 'right', or 'backward'.")
     print("'forward' will move your partner forward.'backward' will move them backwards. 'left' or 'right' will turn your partner accordingly.")
+    print("To get the most amount of points, complete your mission by doing it as absurdly as possible.")
     print("Type 'begin' when you are ready. Good luck.")
     print("")
     print("")
@@ -42,8 +50,8 @@ def minefield() -> None:
     print("")
     print("")
     
-    # Calling on mfez() to do all the heavy lifting.
-    mfez()
+    # Calling on minefield_backend() to do all the heavy lifting.
+    minefield_backend()
 
 
 def starting_position(start: int) -> None:
@@ -175,7 +183,7 @@ def finished_position_secret(saved: str) -> None:
     print("           \______________/                      ")
 
 
-def mfez() -> None:
+def minefield_backend() -> None:
     # Initializing a 'playing' variable to keep track of whether or not player has failed.
     playing: bool = True
 
@@ -184,25 +192,25 @@ def mfez() -> None:
     choice = randint(0,8)
 
     # List of arrows.
-    right_arrow = "\U000027A1"
-    right_up_arrow = "\U00002197"
-    up_arrow = "\U00002B06"
-    left_up_arrow = "\U00002196"
-    left_arrow = "\U00002B05"
-    left_down_arrow = "\U00002199"
-    down_arrow = "\U00002B07"
-    right_down_arrow = "\U00002198"
+    RIGHT_ARROW: str = "\U000027A1"
+    UP_RIGHT_ARROW: str = "\U00002197"
+    UP_ARROW: str = "\U00002B06"
+    UP_LEFT_ARROW: str = "\U00002196"
+    LEFT_ARROW: str = "\U00002B05"
+    DOWN_LEFT_ARROW: str = "\U00002199"
+    DOWN_ARROW: str = "\U00002B07"
+    DOWN_RIGHT_ARROW: str = "\U00002198"
 
-    # Used to change arrows in the picture easily
+    # Used to change arrows in the picture easily.
     global arrows
-    arrows = [right_arrow, right_up_arrow, up_arrow, left_up_arrow, left_arrow, left_down_arrow, down_arrow, right_down_arrow]
+    arrows = [RIGHT_ARROW, UP_RIGHT_ARROW, UP_ARROW, UP_LEFT_ARROW, LEFT_ARROW, DOWN_LEFT_ARROW, DOWN_ARROW, DOWN_RIGHT_ARROW]
 
-    i = 0
-    j = 0
+    i: int = 0
+    j: int = 0
 
     while i < 8 and playing:
 
-        # Lots of technical stuff
+        # Changing the correct time to use 'forward' depending on where the partner is.
         if i == 0:
             necessary_choice = 0
             position = starting_position
@@ -232,28 +240,29 @@ def mfez() -> None:
         if necessary_secret > 7:
             necessary_secret -= 8
 
-        # Resets not_forward after every usage
+        # Resets not_forward and not_backward after every usage.
         not_forward = True
         not_backward = True
+
         while not_forward and not_backward:
-            # Clearing the terminal
+            # Clearing the terminal.
             print("")
             print("")
             print("")
             print("")
             print("")
 
-            # Printing the map at the first position
+            # Printing the map at the given position.
             position(choice)
 
-            # Getting a first instruction from the user
+            # Getting a first instruction from the user.
             movement: str = input("Command: ")
             
             # Making sure the user enters a valid direction
             while movement.lower() != "forward" and movement.lower() != "right" and movement.lower() != "left" and movement.lower() != "backward":
                 movement: str = input("That is not a valid command. Try again: ")
             
-            # Changing arrow accordingly
+            # Changing arrow accordingly.
             if movement.lower() == "left":
                 choice += 1
                 if choice > 7:
@@ -263,19 +272,21 @@ def mfez() -> None:
                 if choice < 0:
                     choice += 8
 
-            # Checking to see if the user still has not entered 'forward'
+            # Checking to see if the user still has not entered 'forward'.
             not_forward: bool = movement.lower() != "forward"
             not_backward: bool = movement.lower() != "backward"
 
-        # The only way the user is correct is if the correct arrow is selected when 'forward' is entered or the ~secret~ is activated
+        # The only way the user is correct is if the correct arrow is selected when 'forward' is entered or the ~secret~ is activated.
         # Otherwise, ask the user to restart
         if (movement == 'forward' and choice != necessary_choice) or (movement == 'backward' and choice != necessary_secret):
             print("Your instructions were incorrect. Your partner perished in the minefield. Try again.")
             playing = False
         
-        # Counter for secret path
+        # Counter for secret path.
         if movement == 'backward' and playing == True:
             j += 1
+            global points
+            points += 100
         i += 1
     if j == 8:
         print("")
@@ -284,6 +295,8 @@ def mfez() -> None:
         print("")
         print("")
         finished_position_secret("\U0001F31F")
+        # Bonus points!
+        points += 200
     else:
         print("")
         print("")
@@ -296,12 +309,36 @@ def mfez() -> None:
 def main() -> None:
     # Initializing global variables inside main.
     global points
-    # Greeting the player
+    points = 0
+
+    # Greeting the player.
     greet(input("What's your name? "))
-    minefield()
 
-    return
+    user_playing = True
+    while user_playing:
+        # Asking the user what they want to do.
+        user_asks: str = input("What would you like to do? 'minefield', 'codebreaker', or 'show points'? ")
+        user_asks_options = ["minefield", "codebreaker", "show points"]
+        while user_asks not in user_asks_options:
+            user_asks = ("Sorry, I don't understand. Would you like to go to 'minefield', 'codebreaker', or 'show points'?")
 
+
+        if user_asks == "minefield":
+            minefield()
+            print("")
+
+        # to do: codebreaker! however, it is 4:00 am and i am tired and want to go to sleep. tomorrow is another day.
+
+        if user_asks.lower() == "show points":
+            print(f"Your points: {points}")
+            print("")
+        
+        # Asking the user if they want to continue their session.
+        user_continue = input("Would you like to continue your session? (Y/N) ")
+        while user_continue.lower() != "y" and user_continue.lower() != "n":
+            user_continue = input("Sorry, I don't understand. Use 'Y' or 'N' to indicate whether you'd like to continue your session. ")
+        if user_continue.lower() == "n":
+            user_playing = False
 
 if __name__ == "__main__":
     main()
