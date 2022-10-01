@@ -3,8 +3,6 @@ __author__ = '730571332'
 
 from random import randint
 
-from pyrsistent import v
-
 
 def greet(name: str) -> None:
     # Function that greets the player given a name.
@@ -12,18 +10,7 @@ def greet(name: str) -> None:
     player = name
 
     # Clearing the terminal.
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
+    print("\n\n\n\n\n\n\n\n\n\n\n\n")
 
     # Welcoming user.
     print(f"Welcome, {name}!")
@@ -32,23 +19,17 @@ def greet(name: str) -> None:
 
 def minefield() -> None:
     # This function will effectively be the "home screen" for the Minefield game.
-    print("")
-    print("~~MINEFIELD~~")
-    print("")
+    print("\n~~MINEFIELD~~\n")
     print("You are given a top down view of your partner.")
     print("You need to give them directions to escape the minefield using the directions 'forward', 'left', 'right', or 'backward'.")
     print("'forward' will move your partner forward.'backward' will move them backwards. 'left' or 'right' will turn your partner accordingly.")
     print("To get the most amount of points, complete your mission by doing it as absurdly as possible.")
-    print("Type 'begin' when you are ready. Good luck.")
-    print("")
-    print("")
+    print("Type 'begin' when you are ready. Good luck.\n\n")
 
     # Checking to make sure user is ready to play.
     ready: str = input("")
     while ready.lower() != "begin":
-            ready = input("Still not ready? Just let me know whenever you are by typing 'begin': ")
-    print("")
-    print("")
+            ready = input("Still not ready? Just let me know whenever you are by typing 'begin': \n\n")
     
     # Calling on minefield_backend() to do all the heavy lifting.
     minefield_backend()
@@ -189,7 +170,7 @@ def minefield_backend() -> None:
 
     # Initializing choice.
     global choice
-    choice = randint(0,8)
+    choice = randint(0,7)
 
     # List of arrows.
     RIGHT_ARROW: str = "\U000027A1"
@@ -246,11 +227,7 @@ def minefield_backend() -> None:
 
         while not_forward and not_backward:
             # Clearing the terminal.
-            print("")
-            print("")
-            print("")
-            print("")
-            print("")
+            print("\n\n\n\n\n")
 
             # Printing the map at the given position.
             position(choice)
@@ -279,37 +256,132 @@ def minefield_backend() -> None:
         # The only way the user is correct is if the correct arrow is selected when 'forward' is entered or the ~secret~ is activated.
         # Otherwise, ask the user to restart
         if (movement == 'forward' and choice != necessary_choice) or (movement == 'backward' and choice != necessary_secret):
-            print("Your instructions were incorrect. Your partner perished in the minefield. Try again.")
+            print("Your instructions were incorrect. Your partner perished in the minefield.")
             playing = False
         
         # Counter for secret path.
         if movement == 'backward' and playing == True:
             j += 1
-            global points
-            points += 100
         i += 1
     if j == 8:
-        print("")
-        print("")
-        print("")
-        print("")
-        print("")
+        print("\n\n\n\n\n")
         finished_position_secret("\U0001F31F")
         # Bonus points!
-        points += 200
+        global points
+        points += 1200
+    elif j > 0 and playing == True:
+        points += (100*j)
     else:
-        print("")
-        print("")
-        print("")
-        print("")
-        print("")
-        finished_position("\U00002B50")
+        if playing == True:
+            print("\n\n\n\n\n")
+            finished_position("\U00002B50")
+            # Bonus points!
+            points += 500
+
+
+def codebreaker() -> None:
+    # This function will effectively be the "home screen" for the Codebreaker game.
+    print("\n~~CODEBREAKER~~\n")
+    print("There is a lock that requires a hidden code.")
+    print("When you guess a character correctly in the correct position, it shows up in purple.")
+    print("When you guess a character correctly but in the wrong posiiton, it shows up in orange.")
+    print("If the character you guess is not in the secret code, it will remain white.")
+    print("Guess a 6-letter combination of letters A-F and numbers 1-9 like this: 'A1B2C3'.")
+    print("To get the most amount of points, complete your mission by doing it as quickly as possible.")
+    print("Type 'begin' when you are ready. Good luck.\n\n")
+
+    # Checking to make sure user is ready to play.
+    ready: str = input("")
+    while ready.lower() != "begin":
+            ready = input("Still not ready? Just let me know whenever you are by typing 'begin': \n\n")
+    
+    # Calling on minefield_backend() to do all the heavy lifting.
+    codebreaker_backend()
+
+    
+
+
+def codebreaker_backend() -> None:
+    # The possibilities to choose from.
+    possible_code_letters: list[str] = ['a', 'b', 'c', 'd', 'e', 'f']
+    possible_code_nums: list[int] = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    
+    # Creating the random code (frn = first random number).
+    frn = possible_code_nums[randint(0, 8)]
+    frl = possible_code_letters[randint(0, 5)]
+    srn = possible_code_nums[randint(0, 8)]
+    while srn == frn:
+        srn = possible_code_nums[randint(0,8)]
+    srl = possible_code_letters[randint(0, 5)]
+    while srl == frl:
+        srl = possible_code_letters[randint(0,5)]
+    trn = possible_code_nums[randint(0, 8)]
+    while trn == frn or trn == srn:
+        trn = possible_code_nums[randint(0,8)]
+    trl = possible_code_letters[randint(0, 5)]
+    while trl == frl or trl == srl:
+        trl = possible_code_letters[randint(0,5)]
+    
+    # Creating a list of secret codes to easier determine how the player did.
+    secret_code_list = [frl, frn, srl, srn, trl, trn]
+    secret_code = frl + frn + srl + srn + trl + trn
+    print(secret_code_list)
+
+    # Making secret_code != user_guess == True.
+    user_guess: str = ""
+
+    # Initializing an attempts variable to track how many tries it takes the user.
+    attempts: int = 0
+
+    while secret_code != user_guess and attempts < 11:
+        # Obtaining a guess from the user.
+        user_guess = input("Make your guess: ")
+
+
+        # Making sure guess is six letters long so that we don't reach an IndexError.
+        while len(user_guess) != 6:
+            user_guess = input("Your guess must be six characters long. Try again: ")
+
+
+        # Making shorthands for boolean expressions to make it easier to access them in the future. (Icnv = first character not valid).
+        Icnv = user_guess[0].lower() not in possible_code_letters
+        IIcnv = user_guess[1] not in possible_code_nums
+        IIIcnv = user_guess[2].lower() not in possible_code_letters
+        IVcnv = user_guess[3] not in possible_code_nums
+        Vcnv = user_guess[4].lower() not in possible_code_letters
+        VIcnv = user_guess[5] not in possible_code_nums
+
+        # Checking that guess follows format.
+        while Icnv or IIcnv or IIIcnv or IVcnv or Vcnv or VIcnv:
+            user_guess = input("Your guess must follow the format 'A1B2C3'. Try again: ")
+            while len(user_guess) != 6:
+                user_guess = input("Your guess must be six characters long. Try again: ")
+
+            # Allowing the while loop to reevaluate the validity of characters.
+            Icnv = user_guess[0].lower() not in possible_code_letters
+            IIcnv = user_guess[1] not in possible_code_nums
+            IIIcnv = user_guess[2].lower() not in possible_code_letters
+            IVcnv = user_guess[3] not in possible_code_nums
+            Vcnv = user_guess[4].lower() not in possible_code_letters
+            VIcnv = user_guess[5] not in possible_code_nums
+        attempts += 1
+    if secret_code == user_guess:
+        print("You guessed the code correctly! Congratulations. Enjoy your points.")
+    attempt_points = 1000 - (100 * (1 - attempts))
+    if attempt_points < 0:
+        attempt_points = 0
+    global points
+    points += (1000 + attempt_points)
+
 
 
 def main() -> None:
     # Initializing global variables inside main.
     global points
     points = 0
+
+    # Instructions.
+    print("Make sure to run in fullscreen to avoid visual bugs.")
 
     # Greeting the player.
     greet(input("What's your name? "))
@@ -320,14 +392,17 @@ def main() -> None:
         user_asks: str = input("What would you like to do? 'minefield', 'codebreaker', or 'show points'? ")
         user_asks_options = ["minefield", "codebreaker", "show points"]
         while user_asks not in user_asks_options:
-            user_asks = ("Sorry, I don't understand. Would you like to go to 'minefield', 'codebreaker', or 'show points'?")
+            user_asks = input("Sorry, I don't understand. Would you like to go to 'minefield', 'codebreaker', or 'show points'? ")
 
 
-        if user_asks == "minefield":
+        if user_asks.lower() == "minefield":
             minefield()
             print("")
 
-        # to do: codebreaker! however, it is 4:00 am and i am tired and want to go to sleep. tomorrow is another day.
+        if user_asks.lower() == "codebreaker":
+            codebreaker()
+            print("")
+
 
         if user_asks.lower() == "show points":
             print(f"Your points: {points}")
