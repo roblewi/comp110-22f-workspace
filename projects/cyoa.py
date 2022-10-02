@@ -14,8 +14,10 @@ def greet(name: str) -> None:
 
     # Welcoming user.
     print(f"Welcome, {name}!")
-    print("I hope you're having a great day so far!")
-
+    print("You can pick a game to get instructions. To win, you must purchase the winners trophy from the shop.")
+    
+    # Instructions.
+    print("Make sure to run this program in fullscreen to avoid visual bugs.\n")
 
 def minefield() -> None:
     # This function will effectively be the "home screen" for the Minefield game.
@@ -285,10 +287,10 @@ def codebreaker() -> None:
     print("There is a lock that requires a hidden code.")
     print("When you guess a character correctly in the correct position, it shows up in purple.")
     print("When you guess a character correctly but in the wrong posiiton, it shows up in orange.")
-    print("If the character you guess is not in the secret code, it will remain white.")
+    print("If the character you guess is not in the secret code, it shows up in white.")
     print("Guess a 6-letter combination of letters A-F and numbers 1-9 like this: 'A1B2C3'.")
     print("To get the most amount of points, complete your mission by doing it as quickly as possible.")
-    print("Type 'begin' when you are ready. Good luck.\n\n")
+    print("You have 10 attempts. Type 'begin' when you are ready. Good luck.\n\n")
 
     # Checking to make sure user is ready to play.
     ready: str = input("")
@@ -325,7 +327,6 @@ def codebreaker_backend() -> None:
     # Creating a list of secret codes to easier determine how the player did.
     secret_code_list = [frl, frn, srl, srn, trl, trn]
     secret_code = frl + frn + srl + srn + trl + trn
-    print(secret_code_list)
 
     # Making secret_code != user_guess == True.
     user_guess: str = ""
@@ -364,24 +365,118 @@ def codebreaker_backend() -> None:
             IVcnv = user_guess[3] not in possible_code_nums
             Vcnv = user_guess[4].lower() not in possible_code_letters
             VIcnv = user_guess[5] not in possible_code_nums
+
+        # Creating a consistent user_guess to display.
+        user_guess_to_display: str = ""
+        i = 0
+        while i < len(user_guess):
+            if i % 2 == 0:
+                user_guess_to_display += f"{(user_guess[i]).upper()}  "
+            else:
+                user_guess_to_display += f"{user_guess[i]}  "
+            i += 1
+
+        # Emojis for feedback variable.
+        PURPLE_BOX: str = "\U0001F7EA"
+        ORANGE_BOX: str = "\U0001F7E7"
+        WHITE_BOX: str = "\U00002B1C"
+
+        # Keeping track of accuracy of user_guess.
+        feedback: str = ""
+
+        # Checking user_guess against secret_code.
+        j = 0
+        while j < len(user_guess):
+            if user_guess[j] == secret_code[j]:
+                feedback += f"{PURPLE_BOX} "
+            elif user_guess[j] in secret_code_list:
+                feedback += f"{ORANGE_BOX} "
+            else:
+                feedback += f"{WHITE_BOX} "
+            j += 1
+        print(f"{feedback}\n{user_guess_to_display}")
+
+
+
         attempts += 1
     if secret_code == user_guess:
         print("You guessed the code correctly! Congratulations. Enjoy your points.")
-    attempt_points = 1000 - (100 * (1 - attempts))
+    else:
+        print("You failed to guess the code correctly.")
+    attempt_points = 1000 - (100 * (attempts - 1))
     if attempt_points < 0:
         attempt_points = 0
     global points
-    points += (1000 + attempt_points)
+    points += (500 + attempt_points)
+
+
+def name_change(name: str) -> None:
+    global player
+    player = name
+    print(f"Name changed to '{player}'")
+
+
+
+def shop() -> None:
+    global points
+    # Welcoming user to shop.
+    print("Welcome to the shop!\nYou may purchase whatever your heart desires.\nItems for sale:\n\n")
+
+    # Item: Name change
+    print("NAME CHANGE\n1000 points\n\n")
+    name_change_cost: int = 1000
+
+
+    # Item: Winners trophy
+    print("WINNERS TROPHY\n10000 points\n\n")
+    winners_trophy_cost: int = 10000
+    
+    buying: str = input("Would you like to buy anything? (Y/N) ")
+    while buying.lower() != 'y' and buying.lower() != 'n':
+        buying = input("I don't understand. Would you like to buy something? (Y/N) ")
+    if buying.lower() == 'y':
+        choice: str = input("What would you like to buy? (C to cancel) ")
+        if choice.lower() == 'c':
+            print("Okay. Transcation cancelled.")
+        elif choice.lower() == "name change":
+            if points >= 1000:
+                points -= 1000
+                name_change(input("What would you like your new name to be? "))
+            else:
+                print("You do not have the required points for this.")
+        elif choice.lower() == "winners trophy":
+            if points >= 10000:
+                points -= 100000
+                print("You have obtained the winners trophy! Congratulations! You beat my game!")
+                print("                               \U0001F3C6                               ")
+                quit()
+            else:
+                print("You do not have the required points for this.")
+    else: 
+        print("Okay! Hope to see you again soon!")
+
+
+def double_or_nothing(wager: int) -> int:
+    print("Heads, you win. Tails, you lose.")
+    print("Flipping a coin...")
+    coin = ["heads", "tails"]
+    chance = randint(0,1)
+
+    print(f"It landed on {coin[chance]}!")
+    if chance == 1:
+        print("Sorry! You lost all your points. :(")
+        wager -= wager
+    elif chance == 0:
+        print("Wow! You doubled your points!")
+        wager += wager
+    return wager
 
 
 
 def main() -> None:
     # Initializing global variables inside main.
     global points
-    points = 0
-
-    # Instructions.
-    print("Make sure to run in fullscreen to avoid visual bugs.")
+    points = 1000
 
     # Greeting the player.
     greet(input("What's your name? "))
@@ -389,10 +484,10 @@ def main() -> None:
     user_playing = True
     while user_playing:
         # Asking the user what they want to do.
-        user_asks: str = input("What would you like to do? 'minefield', 'codebreaker', or 'show points'? ")
-        user_asks_options = ["minefield", "codebreaker", "show points"]
+        user_asks: str = input("What would you like to do? 'minefield', 'codebreaker', 'show points', 'shop', or 'quit'?\nOr, if you'd like, you can play 'double or nothing' with your points. ")
+        user_asks_options = ["minefield", "codebreaker", "show points", "shop", "quit", "double or nothing"]
         while user_asks not in user_asks_options:
-            user_asks = input("Sorry, I don't understand. Would you like to go to 'minefield', 'codebreaker', or 'show points'? ")
+            user_asks = input("Sorry, I don't understand. Would you like to go to 'minefield', 'codebreaker', 'show points', 'shop', or 'quit'? ")
 
 
         if user_asks.lower() == "minefield":
@@ -407,6 +502,23 @@ def main() -> None:
         if user_asks.lower() == "show points":
             print(f"Your points: {points}")
             print("")
+
+        if user_asks.lower() == "shop":
+            shop()
+
+        if user_asks.lower() == "double or nothing":
+            points = double_or_nothing(points)
+        
+        if user_asks.lower() == "quit":
+            impressive_or_not = (points >= 5000)
+            impressive = ""
+            if impressive_or_not:
+                impressive = "an impressive "
+            if points == 0:
+                print(f"You lost! And, on top of that, you got no points! Bummer!")
+                quit()
+            print(f"You lost! However, you did rack up {impressive}{points} points! Thanks for playing.")
+            quit()
         
         # Asking the user if they want to continue their session.
         user_continue = input("Would you like to continue your session? (Y/N) ")
