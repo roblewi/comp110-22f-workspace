@@ -22,7 +22,7 @@ def greet(name: str) -> None:
 def minefield() -> None:
     # This function will effectively be the "home screen" for the Minefield game.
     print("\n~~MINEFIELD~~\n")
-    print("You are given a top down view of your partner.")
+    print(f"Welcome to Minefield, {player}. You are given a top down view of your partner.")
     print("You need to give them directions to escape the minefield using the directions 'forward', 'left', 'right', or 'backward'.")
     print("'forward' will move your partner forward.'backward' will move them backwards. 'left' or 'right' will turn your partner accordingly.")
     print("To get the most amount of points, complete your mission by doing it as absurdly as possible.")
@@ -266,8 +266,9 @@ def minefield_backend() -> None:
             j += 1
         i += 1
     if j == 8:
+        STAR = "\U0001F31F""
         print("\n\n\n\n\n")
-        finished_position_secret("\U0001F31F")
+        finished_position_secret("STAR")
         # Bonus points!
         global points
         points += 1200
@@ -275,8 +276,9 @@ def minefield_backend() -> None:
         points += (100*j)
     else:
         if playing == True:
+            SHOOTING_STAR = "\U00002B50"
             print("\n\n\n\n\n")
-            finished_position("\U00002B50")
+            finished_position("SHOOTING_STAR")
             # Bonus points!
             points += 500
 
@@ -284,7 +286,7 @@ def minefield_backend() -> None:
 def codebreaker() -> None:
     # This function will effectively be the "home screen" for the Codebreaker game.
     print("\n~~CODEBREAKER~~\n")
-    print("There is a lock that requires a hidden code.")
+    print(f"Welcome to Codebreaker, {player}. There is a lock that requires a hidden code.")
     print("When you guess a character correctly in the correct position, it shows up in purple.")
     print("When you guess a character correctly but in the wrong posiiton, it shows up in orange.")
     print("If the character you guess is not in the secret code, it shows up in white.")
@@ -457,18 +459,40 @@ def shop() -> None:
 
 
 def double_or_nothing(wager: int) -> int:
-    print("Heads, you win. Tails, you lose.")
-    print("Flipping a coin...")
-    coin = ["heads", "tails"]
-    chance = randint(0,1)
+    # Initializing while loop
+    playing = True
+    while playing == True:
+        # Can only play if you have money to wager.
+        playing = wager > 0
 
-    print(f"It landed on {coin[chance]}!")
-    if chance == 1:
-        print("Sorry! You lost all your points. :(")
-        wager -= wager
-    elif chance == 0:
-        print("Wow! You doubled your points!")
-        wager += wager
+        # Setting up the situation and engaging the user.
+        print("\nHeads, you win. Tails, you lose.")
+        coin = input("Choose 'heads' or 'tails': ")
+        coin_possibilities = ['heads', 'tails']
+        while coin.lower() not in coin_possibilities:
+            coin = input("That is not a valid choice. Choose 'heads' or 'tails': ")
+
+        # To determine whether the coin lands on 'heads' or 'tails'.
+        chance = randint(0, 1)
+
+        # Giving the user feedback on their choice
+        print(f"\nIt landed on {coin_possibilities[chance]}!")
+        if coin_possibilities[chance] != coin:
+            print(f"Sorry {player}! You lost all your points. :(\n")
+            wager -= wager
+        elif coin_possibilities[chance] == coin:
+            print(f"Wow {player}! You doubled your points! :)\n")
+            wager += wager
+        
+        # Giving the option for the user to double down if they win.
+        if wager != 0:
+            play_again: str = input("Would you like to double down? (Y/N) ")
+            while play_again != 'y' and play_again != 'n':
+                play_again = input("I don't understand. Would you like to double down? (Y/N) ")
+            if play_again.lower() == 'n':
+                playing = False
+        if wager == 0:
+            playing = False
     return wager
 
 
@@ -476,7 +500,7 @@ def double_or_nothing(wager: int) -> int:
 def main() -> None:
     # Initializing global variables inside main.
     global points
-    points = 1000
+    points = 10000
 
     # Greeting the player.
     greet(input("What's your name? "))
@@ -487,7 +511,7 @@ def main() -> None:
         user_asks: str = input("What would you like to do? 'minefield', 'codebreaker', 'show points', 'shop', or 'quit'?\nOr, if you'd like, you can play 'double or nothing' with your points. ")
         user_asks_options = ["minefield", "codebreaker", "show points", "shop", "quit", "double or nothing"]
         while user_asks not in user_asks_options:
-            user_asks = input("Sorry, I don't understand. Would you like to go to 'minefield', 'codebreaker', 'show points', 'shop', or 'quit'? ")
+            user_asks = input("Sorry, I don't understand. Would you like to go to 'minefield', 'codebreaker', 'show points', 'shop', 'double or nothing', or 'quit'? ")
 
 
         if user_asks.lower() == "minefield":
@@ -507,7 +531,10 @@ def main() -> None:
             shop()
 
         if user_asks.lower() == "double or nothing":
-            points = double_or_nothing(points)
+            if points == 0:
+                print("\nYou cannot do a double or nothing with no points! Nice try.\n")
+            else:
+                points = double_or_nothing(points)
         
         if user_asks.lower() == "quit":
             impressive_or_not = (points >= 5000)
@@ -526,6 +553,15 @@ def main() -> None:
             user_continue = input("Sorry, I don't understand. Use 'Y' or 'N' to indicate whether you'd like to continue your session. ")
         if user_continue.lower() == "n":
             user_playing = False
+            impressive_or_not = (points >= 5000)
+            impressive = ""
+            if impressive_or_not:
+                impressive = "an impressive "
+            if points == 0:
+                print(f"You lost! And, on top of that, you got no points! Bummer!")
+                quit()
+            print(f"You lost! However, you did rack up {impressive}{points} points! Thanks for playing.")
+            quit()
 
 if __name__ == "__main__":
     main()
