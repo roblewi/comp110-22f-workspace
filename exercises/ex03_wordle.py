@@ -34,7 +34,7 @@ def emojified(guess: str, secret: str) -> str:
 
 def input_guess(expL: int) -> str:
     """Getting an input for the expected length from the user."""
-    userGuess: str = input(f"Enter a {expL} character word: ")
+    userGuess = input(f"Enter a {expL} character word: ")
     while len(userGuess) != expL:
         userGuess = input(f"That wasn't {expL} chars! Try again: ")
     return userGuess
@@ -42,7 +42,7 @@ def input_guess(expL: int) -> str:
 
 def main() -> None:
     """The entrypoint of the program and main game loop."""
-    secretWord = "coders"
+    secretWord = "codes"
     i = 1
     """Using i < 7 because user only gets 6 votes, not dependent on word length."""
     while i < 7:
