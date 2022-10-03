@@ -1,5 +1,6 @@
-"""fill"""
+"""A plethora of fun functions that deal with lists."""
 __author__ = "730571332"
+
 
 def only_evens(int_list: list[int]) -> list[int]:
     """Returns only even numbers in a list."""
@@ -7,7 +8,7 @@ def only_evens(int_list: list[int]) -> list[int]:
     i = 0
     while i < len(int_list):
         """Checking for evens."""
-        if i % 2 == 0:
+        if int_list[i] % 2 == 0:
             only_evens_list.append(int_list[i])
         """Avoiding certain doom."""
         i += 1
@@ -32,13 +33,27 @@ def concat(int_list_one: list[int], int_list_two: list[int]) -> list[int]:
     return concat_list
 
 
-def sub(int_list: list[int]) -> list[int]:
+def sub(int_list: list[int], start_index: int, end_index: int) -> list[int]:
     """Will return the elements of the list between index 0 and -1."""
     sub_return = []
-    i = 1
-    while i < (len(int_list) - 1):
+    """Making sure user is not trying to break my program."""
+    a = (len(int_list) == 0)
+    b = (start_index > len(int_list))
+    c = (end_index == 0)
+    if a or b or c:
+        return []
+
+    """Correcting for negative start_index values."""
+    while start_index < 0:
+        start_index += 1
+    
+    """Correcting for out-of-range end_list values."""
+    while end_index > len(int_list):
+        end_index -= 1
+
+    while start_index < end_index:
         """Starting at index 1, append every following element except the last."""
-        sub_return.append(int_list[i])
+        sub_return.append(int_list[start_index])
         """Avoiding the collapse of the space-time continuum."""
-        i += 1
+        start_index += 1
     return sub_return
