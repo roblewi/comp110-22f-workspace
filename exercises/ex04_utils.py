@@ -24,7 +24,7 @@ def max(maxInts: list[int]) -> int:
             biggestNumber.pop()
             biggestNumber.append(maxInts[i])
         i += 1
-    return biggestNumber[0]
+    return int(biggestNumber[0])
 
 
 def is_equal(firstList: list[int], secondList: list[int]) -> bool:
