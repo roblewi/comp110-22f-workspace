@@ -15,8 +15,6 @@ def invert(dict_to_flip: dict[str, str]) -> dict[str, str]:
         new_dict[new_key] = new_value
     return new_dict
 
-xs = {'robert': 'periwinkle', 'you': 'periwinkle too? :)'}
-print(invert(xs))
 
 def favorite_color(names_and_colors: dict[str, str]) -> str:
     """Returns the most popular favorite color in a dictionary."""
@@ -32,8 +30,6 @@ def favorite_color(names_and_colors: dict[str, str]) -> str:
         for key in names_and_colors:
             if names_and_colors[key] == color_at_index:
                 i += 1
-        print(i)
-        print(votes)
         if i > votes:
             votes = i
             popular_color = color_at_index
@@ -43,6 +39,7 @@ def favorite_color(names_and_colors: dict[str, str]) -> str:
 
 
 def count(key_list: list[str]) -> dict[str, int]:
+    """Returns the number of times everything in a list is listed."""
     count_dict: dict[str, int] = dict()
     for key in key_list:
         if not (key in count_dict):
@@ -50,4 +47,3 @@ def count(key_list: list[str]) -> dict[str, int]:
         else:
             count_dict[key] += 1
     return count_dict
-

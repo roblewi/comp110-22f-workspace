@@ -50,15 +50,18 @@ def test_favorite_color_blank() -> None:
 
 
 def test_count_simple_list() -> None:
+    """Testing count() with a simple list."""
     xs = ['a', 'a', 'b', 'b', 'b']
     assert count(xs) == {'a': 2, 'b': 3}
 
 
 def test_count_out_of_order_list() -> None:
+    """Testing count() with a list that is not in perfect order."""
     xs = ['banana', 'apple', 'pear', 'apple', 'banana', 'apple']
     assert count(xs) == {'banana': 2, 'apple': 3, 'pear': 1}
 
 
 def test_count_empty_list() -> None:
+    """Testing count() with an empty list."""
     xs = []
     assert count(xs) == {}
