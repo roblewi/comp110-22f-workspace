@@ -21,11 +21,11 @@ def read_csv_rows(filename: str) -> list[dict[str, str]]:
     for row in csv_reader:
         result.append(row)
     
-    
     # Close the file
     file_handle.close()    
 
     return result
+
 
 def column_values(table: list[dict[str, str]], column: str) -> list[str]:
     """Produce a list[str] of all values in a single column."""
@@ -53,7 +53,7 @@ def head(table: dict[str, list[str]], count: int) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
 
     for column in table:
-        values = []
+        values: list[str] = []
         for value in table[column]:
             if len(values) < count:
                 values.append(value)
