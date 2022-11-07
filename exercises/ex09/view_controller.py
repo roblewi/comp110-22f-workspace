@@ -20,6 +20,7 @@ class ViewController:
         """Initialize the VC."""
         self.model = model
         self.screen = Screen()
+        self.screen.bgcolor("dark gray")
         self.screen.setup(constants.VIEW_WIDTH, constants.VIEW_HEIGHT)
         self.screen.tracer(0, 0)
         self.screen.delay(0)
