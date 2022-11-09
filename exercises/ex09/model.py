@@ -158,10 +158,19 @@ class Model:
     def check_contacts(self) -> None:
         """Checks if any two cells are in contact with each other."""
         # TODO - MAKE MORE EFFICIENT (every cell pair getting checked multiple times and against itself)
-        for i in self.population:
-            for j in self.population:
-                if i.location.distance(j.location) <= constants.CELL_RADIUS:
-                    i.contact_with(j)
+        # for i in self.population:
+        #     for j in self.population:
+        #         if i.location.distance(j.location) <= constants.CELL_RADIUS:
+        #             i.contact_with(j)
+        #             counter += 1
+
+        checked: list[int] = []
+        for i in range(len(self.population)):
+            checked.append(i)
+            for j in range(len(self.population)):
+                if j not in checked:
+                    if self.population[i].location.distance(self.population[j].location) <= constants.CELL_RADIUS:
+                        self.population[i].contact_with(self.population[j])
 
     def is_complete(self) -> bool:
         """Method to indicate when the simulation is complete."""
